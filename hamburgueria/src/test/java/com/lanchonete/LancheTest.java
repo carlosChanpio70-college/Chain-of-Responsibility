@@ -1,14 +1,8 @@
 package com.lanchonete;
 
-import com.lanchonete.lanche.Hamburguer;
-import com.lanchonete.lanche.Lanche;
-import com.lanchonete.lanche.decorator.ExtraBacon;
-import com.lanchonete.lanche.decorator.ExtraQueijo;
-import com.lanchonete.lanche.decorator.IngredientesExtraDecorator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import com.lanchonete.lanche.*;
+import com.lanchonete.lanche.decorator.*;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -22,7 +16,7 @@ class LancheTest {
         hamburguer = new Hamburguer();
     }
 
-    // ─── Hamburguer ────────────────────────────────────────────────────────────
+    //Hamburguer
 
     @Nested
     @DisplayName("Hamburguer")
@@ -41,7 +35,7 @@ class LancheTest {
         }
     }
 
-    // ─── ExtraQueijo ───────────────────────────────────────────────────────────
+    //ExtraQueijo
 
     @Nested
     @DisplayName("ExtraQueijo")
@@ -68,7 +62,7 @@ class LancheTest {
         }
     }
 
-    // ─── ExtraBacon ────────────────────────────────────────────────────────────
+    //ExtraBacon
 
     @Nested
     @DisplayName("ExtraBacon")
@@ -95,7 +89,7 @@ class LancheTest {
         }
     }
 
-    // ─── Decorators compostos ──────────────────────────────────────────────────
+    //Decorators compostos
 
     @Nested
     @DisplayName("Decorators compostos (encadeamento)")
@@ -128,6 +122,10 @@ class LancheTest {
         void deveSerInstanciaDecorator() {
             Lanche lanche = new ExtraQueijo(hamburguer);
             assertInstanceOf(IngredientesExtraDecorator.class, lanche);
+        }
+
+        private void assertInstanceOf(Class<IngredientesExtraDecorator> class1, Lanche lanche) {
+            assertTrue(class1.isInstance(lanche));
         }
     }
 }

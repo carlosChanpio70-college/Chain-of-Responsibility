@@ -2,9 +2,6 @@ package com.lanchonete.entrega;
 
 import com.lanchonete.pedido.Pedido;
 
-/**
- * Estratégia de entrega via Drive-Through.
- */
 public class DriveThrough implements Entrega {
 
     @Override

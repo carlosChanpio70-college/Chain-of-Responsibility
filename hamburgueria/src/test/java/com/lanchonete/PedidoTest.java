@@ -1,15 +1,10 @@
 package com.lanchonete;
 
-import com.lanchonete.entrega.Delivery;
-import com.lanchonete.entrega.Loja;
-import com.lanchonete.lanche.Hamburguer;
-import com.lanchonete.lanche.Lanche;
-import com.lanchonete.lanche.decorator.ExtraBacon;
-import com.lanchonete.lanche.decorator.ExtraQueijo;
+import com.lanchonete.entrega.*;
+import com.lanchonete.lanche.*;
+import com.lanchonete.lanche.decorator.*;
 import com.lanchonete.pedido.Pedido;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Testes de Pedido")
 class PedidoTest {
 
-    // ─── Construção válida ─────────────────────────────────────────────────────
+    //Construção válida
 
     @Nested
     @DisplayName("Construção do Pedido")
@@ -55,7 +50,7 @@ class PedidoTest {
         }
     }
 
-    // ─── calcularTotal ─────────────────────────────────────────────────────────
+    //calcularTotal
 
     @Nested
     @DisplayName("calcularTotal()")
@@ -102,7 +97,7 @@ class PedidoTest {
         }
     }
 
-    // ─── descricao ─────────────────────────────────────────────────────────────
+    //descricao
 
     @Nested
     @DisplayName("descricao()")
@@ -125,7 +120,7 @@ class PedidoTest {
         }
     }
 
-    // ─── getLanches / getEntrega ───────────────────────────────────────────────
+    //getLanches / getEntrega
 
     @Nested
     @DisplayName("Getters")

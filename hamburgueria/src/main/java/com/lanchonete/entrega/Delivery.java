@@ -2,9 +2,6 @@ package com.lanchonete.entrega;
 
 import com.lanchonete.pedido.Pedido;
 
-/**
- * Estratégia de entrega via Delivery (entrega em domicílio).
- */
 public class Delivery implements Entrega {
 
     private static final double TAXA_ENTREGA = 8.00;

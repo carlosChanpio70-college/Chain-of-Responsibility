@@ -2,9 +2,6 @@ package com.lanchonete.entrega;
 
 import com.lanchonete.pedido.Pedido;
 
-/**
- * Estratégia de entrega para retirada na loja (balcão).
- */
 public class Loja implements Entrega {
 
     @Override

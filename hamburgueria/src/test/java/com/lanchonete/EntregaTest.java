@@ -1,16 +1,10 @@
 package com.lanchonete;
 
-import com.lanchonete.entrega.Delivery;
-import com.lanchonete.entrega.DriveThrough;
-import com.lanchonete.entrega.Loja;
-import com.lanchonete.lanche.Hamburguer;
-import com.lanchonete.lanche.Lanche;
-import com.lanchonete.lanche.decorator.ExtraBacon;
-import com.lanchonete.lanche.decorator.ExtraQueijo;
+import com.lanchonete.entrega.*;
+import com.lanchonete.lanche.*;
+import com.lanchonete.lanche.decorator.*;
 import com.lanchonete.pedido.Pedido;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
