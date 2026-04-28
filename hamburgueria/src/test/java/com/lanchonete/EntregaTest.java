@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Testes de Estratégias de Entrega")
 class EntregaTest {
 
-    // ─── Helpers ───────────────────────────────────────────────────────────────
+    // Helpers
 
     /** Captura System.out durante a execução do bloco. */
     private String capturarSaida(Runnable bloco) {
@@ -30,11 +30,7 @@ class EntregaTest {
         return baos.toString();
     }
 
-    private Pedido pedidoSimples() {
-        return new Pedido(List.of(new Hamburguer()), new Loja());
-    }
-
-    // ─── Delivery ──────────────────────────────────────────────────────────────
+    // Delivery
 
     @Nested
     @DisplayName("Delivery")
@@ -75,7 +71,7 @@ class EntregaTest {
         }
     }
 
-    // ─── DriveThrough ──────────────────────────────────────────────────────────
+    // DriveThrough
 
     @Nested
     @DisplayName("DriveThrough")
@@ -110,7 +106,7 @@ class EntregaTest {
         }
     }
 
-    // ─── Loja ──────────────────────────────────────────────────────────────────
+    // Loja 
 
     @Nested
     @DisplayName("Loja")
@@ -135,7 +131,7 @@ class EntregaTest {
         }
     }
 
-    // ─── Intercâmbio de estratégias (Strategy Pattern) ─────────────────────────
+    // Intercâmbio de estratégias (Strategy Pattern)
 
     @Nested
     @DisplayName("Troca de estratégia em runtime")
@@ -162,6 +158,54 @@ class EntregaTest {
             assertDoesNotThrow(() -> new Pedido(lanches, new Delivery()).processar());
             assertDoesNotThrow(() -> new Pedido(lanches, new DriveThrough()).processar());
             assertDoesNotThrow(() -> new Pedido(lanches, new Loja()).processar());
+        }
+    }
+
+    // Transições de Estado com Observer
+
+    @Nested
+    @DisplayName("Transições de Estado (Observer Pattern)")
+    class EstadoTransicaoTest {
+
+        @Test
+        @DisplayName("pedido começa em estado 'Preparando'")
+        void pedidoComecaEmPreparando() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            assertEquals("Preparando", p.getEstadoDescricao());
+        }
+
+        @Test
+        @DisplayName("deve transicionar de Preparando para Em Rota")
+        void transicaodePreparandoParaEmRota() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            String saida = capturarSaida(p::colocarEmRota);
+            
+            assertTrue(saida.contains("🚀") || saida.contains("entrega"));
+            assertEquals("Em Rota", p.getEstadoDescricao());
+        }
+
+        @Test
+        @DisplayName("deve transicionar de Em Rota para Entregue")
+        void transicaodeEmRotaParaEntregue() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            p.colocarEmRota();
+            
+            String saida = capturarSaida(p::entregar);
+            
+            assertTrue(saida.contains("sucesso") || saida.contains("✅"));
+            assertEquals("Entregue", p.getEstadoDescricao());
+        }
+
+        @Test
+        @DisplayName("não deve permitir ações inválidas no estado")
+        void deveRejeitarAcoesInvalidas() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            p.colocarEmRota();
+            p.entregar();
+            
+            String saida = capturarSaida(p::preparar);
+            
+            assertTrue(saida.contains("❌") || saida.contains("Não é possível"));
         }
     }
 }

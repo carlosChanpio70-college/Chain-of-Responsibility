@@ -1,5 +1,6 @@
 package com.lanchonete.pedido;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,14 +9,18 @@ import com.lanchonete.entrega.Entrega;
 import com.lanchonete.entrega.state.EstadoPedido;
 import com.lanchonete.entrega.state.Preparando;
 import com.lanchonete.lanche.Lanche;
+import com.lanchonete.observer.Observer;
+import com.lanchonete.observer.PedidoSubject;
 
 /**
  * Representa um pedido composto por uma lista de lanches e uma estratégia de entrega.
+ * Implementa o padrão Observer como Subject.
  */
-public class Pedido {
+public class Pedido implements PedidoSubject {
     private final List<Lanche> lanches;
     private final Entrega entrega;
     private EstadoPedido estadoAtual;   // ← NOVO: estado do pedido
+    private final List<Observer> observadores;   // ← NOVO: observadores
 
     public Pedido(List<Lanche> l, Entrega e) {
         if (l == null || l.isEmpty()) {
@@ -27,6 +32,7 @@ public class Pedido {
         this.lanches = Collections.unmodifiableList(l);
         this.entrega = e;
         this.estadoAtual = new Preparando();   // ← NOVO: começa sempre em "Preparando"
+        this.observadores = new ArrayList<>();   // ← NOVO: inicializa observadores
     }
 
     /**
@@ -68,6 +74,7 @@ public class Pedido {
 
     public void setEstado(EstadoPedido estado) {
         this.estadoAtual = estado;
+        notifyObservers();
     }
 
     public void preparar() {
@@ -84,5 +91,24 @@ public class Pedido {
 
     public String getEstadoDescricao() {
         return estadoAtual.getDescricao();
+    }
+
+    @Override
+    public void attach(Observer o) {
+        if (!observadores.contains(o)) {
+            observadores.add(o);
+        }
+    }
+
+    @Override
+    public void detach(Observer o) {
+        observadores.remove(o);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer o : observadores) {
+            o.update(this);
+        }
     }
 }

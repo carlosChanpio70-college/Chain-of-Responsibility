@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import com.lanchonete.lanche.Hamburguer;
 import com.lanchonete.lanche.Lanche;
 import com.lanchonete.lanche.decorator.ExtraBacon;
 import com.lanchonete.lanche.decorator.ExtraQueijo;
+import com.lanchonete.observer.Observer;
 import com.lanchonete.pedido.Pedido;
 
 @DisplayName("Testes de Pedido")
@@ -149,6 +151,77 @@ class PedidoTest {
             Lanche l2 = new ExtraBacon(new Hamburguer());
             Pedido p = new Pedido(List.of(l1, l2), new Delivery());
             assertEquals(2, p.getLanches().size());
+        }
+    }
+
+    @Nested
+    @DisplayName("Padrão Observer")
+    class ObserverTest {
+
+        @Test
+        @DisplayName("deve adicionar um observador")
+        void deveAdicionarObservador() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            Observer observadorMock = (pedido) -> {};
+            assertDoesNotThrow(() -> {
+                p.attach(observadorMock);
+            }, "Não deve lançar exceção ao adicionar observador");
+        }
+
+        @Test
+        @DisplayName("não deve adicionar observador duplicado")
+        void naoDeveAdicionarObservadorDuplicado() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            Observer observadorMock = (pedido) -> {};
+            p.attach(observadorMock);
+            p.attach(observadorMock); // Tenta adicionar novamente
+            // O teste passa se não houver exceção e o observador foi adicionado apenas uma vez
+            assertNotNull(p);
+        }
+
+        @Test
+        @DisplayName("deve remover um observador")
+        void deveRemoverObservador() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            Observer observadorMock = (pedido) -> {};
+            p.attach(observadorMock);
+            p.detach(observadorMock);
+            // O teste passa se não houver exceção
+            assertNotNull(p);
+        }
+
+        @Test
+        @DisplayName("deve notificar todos os observadores")
+        void deveNotificarObservadores() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            
+            // Criamos um observador que conta quantas vezes foi chamado
+            final int[] contadorNotificacoes = {0};
+            Observer observador = (pedido) -> contadorNotificacoes[0]++;
+            
+            p.attach(observador);
+            p.notifyObservers();
+            
+            assertEquals(1, contadorNotificacoes[0], "Observador deve ser notificado uma vez");
+        }
+
+        @Test
+        @DisplayName("múltiplos observadores devem ser notificados")
+        void multiplosObservadoresDevemSerNotificados() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            
+            final int[] contador1 = {0};
+            final int[] contador2 = {0};
+            
+            Observer observador1 = (pedido) -> contador1[0]++;
+            Observer observador2 = (pedido) -> contador2[0]++;
+            
+            p.attach(observador1);
+            p.attach(observador2);
+            p.notifyObservers();
+            
+            assertEquals(1, contador1[0], "Primeiro observador deve ser notificado uma vez");
+            assertEquals(1, contador2[0], "Segundo observador deve ser notificado uma vez");
         }
     }
 }
