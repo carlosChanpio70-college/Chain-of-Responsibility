@@ -1,9 +1,8 @@
 package com.lanchonete.entrega.state;
 
-import com.lanchonete.observer.Observer;
 import com.lanchonete.pedido.Pedido;
 
-public class EmRota implements EstadoPedido, Observer {
+public class EmRota implements EstadoPedido {
     @Override
     public void preparar(Pedido p) {
         System.out.println("❌ Não é possível: pedido já está em rota.");
@@ -26,8 +25,4 @@ public class EmRota implements EstadoPedido, Observer {
         return "Em Rota";
     }
 
-    @Override
-    public void update(Pedido p) {
-        System.out.println("📍 [Em Rota] Pedido atualizado: " + p.getEstadoDescricao());
-    }
 }

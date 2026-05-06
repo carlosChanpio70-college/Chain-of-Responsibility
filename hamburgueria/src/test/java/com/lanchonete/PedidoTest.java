@@ -224,4 +224,35 @@ class PedidoTest {
             assertEquals(1, contador2[0], "Segundo observador deve ser notificado uma vez");
         }
     }
+
+    @Nested
+    @DisplayName("calcularDesconto() e calcularTotalComDesconto()")
+    class CalcularDescontoTest {
+
+        @Test
+        @DisplayName("pedido com um lanche não recebe desconto")
+        void semDescontoParaUmLanche() {
+            Pedido p = new Pedido(List.of(new Hamburguer()), new Loja());
+            assertEquals(0.0, p.calcularDesconto(), 0.001);
+            assertEquals(15.00, p.calcularTotalComDesconto(), 0.001);
+        }
+
+        @Test
+        @DisplayName("pedido com dois lanches aplica desconto de 10%")
+        void descontoComboParaDoisLanches() {
+            Pedido p = new Pedido(List.of(new Hamburguer(), new Hamburguer()), new Loja());
+            assertEquals(3.00, p.calcularDesconto(), 0.001);
+            assertEquals(27.00, p.calcularTotalComDesconto(), 0.001);
+        }
+
+        @Test
+        @DisplayName("pedido com itens extras aplica desconto sobre total")
+        void descontoComboComLancheComExtras() {
+            Lanche l1 = new Hamburguer();                          // 15.00
+            Lanche l2 = new ExtraQueijo(new Hamburguer());         // 18.00
+            Pedido p = new Pedido(List.of(l1, l2), new Loja());
+            assertEquals(3.30, p.calcularDesconto(), 0.001);
+            assertEquals(29.70, p.calcularTotalComDesconto(), 0.001);
+        }
+    }
 }

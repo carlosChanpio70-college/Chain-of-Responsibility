@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.lanchonete.desconto.DescontoCombo;
+import com.lanchonete.desconto.DescontoHandler;
+import com.lanchonete.desconto.SemDesconto;
 import com.lanchonete.entrega.Entrega;
 import com.lanchonete.entrega.state.EstadoPedido;
 import com.lanchonete.entrega.state.Preparando;
@@ -20,6 +23,7 @@ public class Pedido implements PedidoSubject {
     private final List<Lanche> lanches;
     private final Entrega entrega;
     private EstadoPedido estadoAtual;   // ← NOVO: estado do pedido
+    private final DescontoHandler descontoHandler;
     private final List<Observer> observadores;   // ← NOVO: observadores
 
     public Pedido(List<Lanche> l, Entrega e) {
@@ -32,6 +36,9 @@ public class Pedido implements PedidoSubject {
         this.lanches = Collections.unmodifiableList(l);
         this.entrega = e;
         this.estadoAtual = new Preparando();   // ← NOVO: começa sempre em "Preparando"
+        DescontoCombo descontoCombo = new DescontoCombo();
+        descontoCombo.setProximo(new SemDesconto());
+        this.descontoHandler = descontoCombo;
         this.observadores = new ArrayList<>();   // ← NOVO: inicializa observadores
     }
 
@@ -91,6 +98,14 @@ public class Pedido implements PedidoSubject {
 
     public String getEstadoDescricao() {
         return estadoAtual.getDescricao();
+    }
+
+    public double calcularDesconto() {
+        return descontoHandler.calcularDesconto(this);
+    }
+
+    public double calcularTotalComDesconto() {
+        return calcularTotal() - calcularDesconto();
     }
 
     @Override

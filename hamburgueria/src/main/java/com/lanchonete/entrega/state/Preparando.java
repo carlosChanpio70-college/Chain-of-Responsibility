@@ -1,9 +1,8 @@
 package com.lanchonete.entrega.state;
 
-import com.lanchonete.observer.Observer;
 import com.lanchonete.pedido.Pedido;
 
-public class Preparando implements EstadoPedido, Observer {
+public class Preparando implements EstadoPedido {
     @Override
     public void preparar(Pedido p) {
         System.out.println("✅ Pedido já está em preparação.");
@@ -26,8 +25,4 @@ public class Preparando implements EstadoPedido, Observer {
         return "Preparando";
     }
 
-    @Override
-    public void update(Pedido p) {
-        System.out.println("📍 [Preparando] Pedido atualizado: " + p.getEstadoDescricao());
-    }
 }
